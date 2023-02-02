@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Score</title>
+    <script type="text/javascript">
+        var conn = new WebSocket("ws://localhost:8080/ws");
+
+        conn.onopen = function (e) {
+            console.log("Connection established");
+
+            // subscribe to the desired match
+            conn.send(JSON.stringify("match-1"));
+        };
+
+        conn.onmessage = function (e) {
+            let response = JSON.parse(e.data);
+
+            // update the score on the page
+            document.getElementById("match-1-info").innerHTML = response.HomeTeam + " : " + response.HomeGoals + " - " + response.AwayTeam + " : " + response.AwayGoals;
+            let HomeScores = ""
+            let AwayScores = ""
+
+            if (response.State == "end") {
+                document.getElementById("matchResult").innerHTML = "End of the match !!!"
+                return
+            }
+
+            if(response.State == "end of the first half") {
+
+            }
+
+            if(response.Scores) {
+
+                for (let i = 0; i < response.Scores.length; i++) {
+                    let score = response.Scores[i]
+
+                    if(score.Team == "home") {
+                        HomeScores += score.Name + " '" + score.Minute + "<br>";
+                        AwayScores += " <br>";
+                    } else {
+                        AwayScores += score.Name + " '" + score.Minute + "<br>";
+                        HomeScores += " <br>";
+                    }
+
+                }
+
+
+                document.getElementById("homeScores").innerHTML = HomeScores
+                document.getElementById("awayScores").innerHTML = AwayScores
+
+            }
+
+
+        };
+
+        conn.onclose = function (e) {
+            console.log("Connection closed");
+        };
+    </script>
+    <style>
+        .scoreContainer{
+            display: flex;
+            gap: 10px;
+        }
+
+        .score {
+            min-width: 50px;
+        }
+    </style>
+</head>
+<body>
+<h1>Live Score</h1>
+<p id="match-1">Match 1: <span id="match-1-info">0</span></p>
+<div class="scoreContainer">
+
+    <p id="homeScores" class="score">
+
+    </p>
+
+    <p id="awayScores" class="score">
+
+    </p>
+
+</div>
+<p  id="matchResult"></p>
+
+</body>
+</html>
