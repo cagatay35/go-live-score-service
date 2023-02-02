@@ -13,7 +13,7 @@ This is a live score application that broadcasts real-time scores to clients usi
 Clone the repository to your local machine:
 
 ```
-git clone https://github.com/cagatay35/live-score-app.git
+git clone https://github.com/cagatay35/go-live-score-service
 ```
 
 ### Usage
